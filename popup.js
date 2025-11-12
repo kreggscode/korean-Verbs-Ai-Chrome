@@ -223,36 +223,70 @@ function speakText(text, lang = 'ko-KR', gender = 'female') {
     
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
-    utterance.rate = 0.85;  // Slightly slower for clarity
-    utterance.pitch = gender === 'female' ? 1.3 : 0.8;
-    utterance.volume = 1;
     
-    // Try to select a natural female voice
+    // Optimize settings for Korean vs English
+    if (lang.startsWith('ko')) {
+        utterance.rate = 0.8;      // Slower for Korean clarity
+        utterance.pitch = 1.0;     // Natural pitch for Korean
+        utterance.volume = 1.0;
+    } else {
+        utterance.rate = 0.9;      // Slightly slower for English
+        utterance.pitch = gender === 'female' ? 1.2 : 0.8;
+        utterance.volume = 1.0;
+    }
+    
+    // Try to select a natural voice
     const voices = speechSynthesis.getVoices();
     if (voices.length > 0) {
-        // Prefer female voices for natural sound
         let selectedVoice = null;
         
-        // First, try to find a voice matching the language with female preference
-        for (let voice of voices) {
-            if (voice.lang.startsWith(lang.split('-')[0])) {
-                if (voice.name.toLowerCase().includes('female') || 
-                    voice.name.toLowerCase().includes('woman') ||
-                    voice.name.toLowerCase().includes('samantha') ||
-                    voice.name.toLowerCase().includes('victoria') ||
-                    voice.name.toLowerCase().includes('moira')) {
-                    selectedVoice = voice;
-                    break;
+        // For Korean, find the best Korean voice
+        if (lang.startsWith('ko')) {
+            // First, try to find a native Korean voice
+            for (let voice of voices) {
+                if (voice.lang === 'ko-KR' || voice.lang === 'ko') {
+                    // Prefer Google Korean voice or native Korean voices
+                    if (voice.name.includes('Google') || 
+                        voice.name.includes('Korean') ||
+                        voice.name.includes('ko-KR')) {
+                        selectedVoice = voice;
+                        break;
+                    }
                 }
             }
-        }
-        
-        // If no specific female voice found, use any voice for the language
-        if (!selectedVoice) {
+            
+            // If no specific voice found, use any Korean voice
+            if (!selectedVoice) {
+                for (let voice of voices) {
+                    if (voice.lang.startsWith('ko')) {
+                        selectedVoice = voice;
+                        break;
+                    }
+                }
+            }
+        } else {
+            // For English, prefer female voices
             for (let voice of voices) {
                 if (voice.lang.startsWith(lang.split('-')[0])) {
-                    selectedVoice = voice;
-                    break;
+                    if (voice.name.toLowerCase().includes('female') || 
+                        voice.name.toLowerCase().includes('woman') ||
+                        voice.name.toLowerCase().includes('samantha') ||
+                        voice.name.toLowerCase().includes('victoria') ||
+                        voice.name.toLowerCase().includes('moira') ||
+                        voice.name.toLowerCase().includes('google us english female')) {
+                        selectedVoice = voice;
+                        break;
+                    }
+                }
+            }
+            
+            // If no specific female voice found, use any voice for the language
+            if (!selectedVoice) {
+                for (let voice of voices) {
+                    if (voice.lang.startsWith(lang.split('-')[0])) {
+                        selectedVoice = voice;
+                        break;
+                    }
                 }
             }
         }

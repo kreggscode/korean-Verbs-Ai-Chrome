@@ -30,8 +30,8 @@ chrome.alarms.create('cleanupHistory', { periodInMinutes: 60 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'cleanupHistory') {
-        chrome.storage.local.get('learningHistory', (result) => {
-            if (result.learningHistory && result.learningHistory.length > 100) {
+        chrome.storage.local.get(['learningHistory'], (result) => {
+            if (result && result.learningHistory && result.learningHistory.length > 100) {
                 // Keep only the 100 most recent items
                 const history = result.learningHistory.slice(0, 100);
                 chrome.storage.local.set({ learningHistory: history });
