@@ -177,10 +177,14 @@ body {
 .tab-pane {
     display: none;
     animation: fadeIn 0.3s ease;
+    flex-direction: column;
+    height: 100%;
 }
 
 .tab-pane.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 @keyframes fadeIn {
