@@ -39,7 +39,8 @@ const exampleRomanization = document.getElementById('exampleRomanization');
 const exampleEnglish = document.getElementById('exampleEnglish');
 const speakBtn = document.getElementById('speakBtn');
 const speakEnBtn = document.getElementById('speakEnBtn');
-const speakExampleBtn = document.getElementById('speakExampleBtn');
+const speakExampleKoreanBtn = document.getElementById('speakExampleKoreanBtn');
+const speakExampleEnBtn = document.getElementById('speakExampleEnBtn');
 const aiExplainBtn = document.getElementById('aiExplainBtn');
 const aiResponse = document.getElementById('aiResponse');
 const aiText = document.getElementById('aiText');
@@ -588,8 +589,12 @@ function setupEventListeners() {
         if (currentVerb) speakText(currentVerb.english_meaning, 'en-US', 'female');
     });
 
-    speakExampleBtn.addEventListener('click', () => {
+    speakExampleKoreanBtn.addEventListener('click', () => {
         if (currentVerb) speakText(currentVerb.korean_sentence, 'ko-KR', 'female');
+    });
+
+    speakExampleEnBtn.addEventListener('click', () => {
+        if (currentVerb) speakText(currentVerb.english_sentence, 'en-US', 'female');
     });
 
     // AI Explanation
