@@ -19,6 +19,7 @@
         <!-- Header -->
         <header class="header">
             <div class="header-content">
+                <button class="btn-back-header" id="backHeaderBtn" style="display: none;">← Back</button>
                 <h1 class="title">🇰🇷 Korean Verbs AI</h1>
                 <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">
                     <span class="theme-icon">🌙</span>
@@ -27,7 +28,7 @@
         </header>
 
         <!-- Navigation Tabs -->
-        <nav class="tabs">
+        <nav class="tabs" id="mainTabs">
             <button class="tab-btn active" data-tab="verbs">
                 <span class="tab-icon">📚</span>
                 <span class="tab-label">Verbs</span>
@@ -50,83 +51,77 @@
         <main class="tab-content">
             <!-- Verbs Tab -->
             <div class="tab-pane active" id="verbs-tab">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search verbs..." class="search-input">
-                    <span class="search-icon">🔍</span>
-                </div>
-
-                <div class="categories-section">
-                    <h2 class="section-title">Categories</h2>
-                    <div class="categories-grid" id="categoriesGrid">
-                        <!-- Categories will be populated here -->
+                <!-- Page 1: Categories -->
+                <div class="page" id="page-categories">
+                    <div class="page-header">
+                        <h2>Select a Category</h2>
                     </div>
+                    <div class="categories-grid" id="categoriesGrid"></div>
                 </div>
 
-                <div class="verbs-section">
-                    <div class="verbs-header">
-                        <h2 class="section-title" id="categoryTitle">Select a category</h2>
-                        <button class="btn-reset" id="resetBtn" style="display: none;">← Back</button>
+                <!-- Page 2: Verbs List -->
+                <div class="page" id="page-verbs" style="display: none;">
+                    <div class="page-header">
+                        <h2 id="categoryTitle">Verbs</h2>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Search verbs..." class="search-input">
+                            <span class="search-icon">🔍</span>
+                        </div>
                     </div>
                     <div class="verbs-list" id="verbsList"></div>
-                    <div class="verb-detail" id="verbDetail" style="display: none;">
-                        <!-- Navigation Top -->
-                        <div class="detail-nav-top">
-                            <button class="btn-back" id="backBtn">← Back</button>
-                            <div class="verb-counter" id="verbCounter"></div>
-                            <div class="nav-buttons">
-                                <button class="btn-nav-prev" id="prevBtn" title="Previous verb">◀ Prev</button>
-                                <button class="btn-nav-next" id="nextBtn" title="Next verb">Next ▶</button>
-                            </div>
-                        </div>
+                </div>
+
+                <!-- Page 3: Verb Detail -->
+                <div class="page" id="page-verb-detail" style="display: none;">
+                    <div class="verb-detail-content">
+                        <h3 class="verb-korean" id="detailVerb"></h3>
+                        <p class="verb-romanization" id="detailRomanization"></p>
+                        <p class="verb-english" id="detailEnglish"></p>
                         
-                        <div class="verb-content">
-                            <h3 class="verb-korean" id="detailVerb"></h3>
-                            <p class="verb-romanization" id="detailRomanization"></p>
-                            <p class="verb-english" id="detailEnglish"></p>
-                            
-                            <div class="pronunciation-section">
-                                <button class="btn-speak" id="speakBtn">
-                                    <span class="speak-icon">🔊</span>
-                                    Pronounce
-                                </button>
-                            </div>
+                        <div class="pronunciation-section">
+                            <button class="btn-speak" id="speakBtn">
+                                <span class="speak-icon">🔊</span>
+                                Pronounce (Korean)
+                            </button>
+                            <button class="btn-speak-en" id="speakEnBtn">
+                                <span class="speak-icon">🔊</span>
+                                Pronounce (English)
+                            </button>
+                        </div>
 
-                            <div class="example-section">
-                                <h4 class="example-title">Example Sentence</h4>
-                                <p class="example-korean" id="exampleKorean"></p>
-                                <p class="example-romanization" id="exampleRomanization"></p>
-                                <p class="example-english" id="exampleEnglish"></p>
-                                <button class="btn-speak-example" id="speakExampleBtn">
-                                    <span class="speak-icon">🔊</span>
-                                    Pronounce Example
-                                </button>
-                            </div>
+                        <div class="example-section">
+                            <h4 class="example-title">Example Sentence</h4>
+                            <p class="example-korean" id="exampleKorean"></p>
+                            <p class="example-romanization" id="exampleRomanization"></p>
+                            <p class="example-english" id="exampleEnglish"></p>
+                            <button class="btn-speak-example" id="speakExampleBtn">
+                                <span class="speak-icon">🔊</span>
+                                Pronounce Example
+                            </button>
+                        </div>
 
-                            <div class="ai-section">
-                                <h4 class="ai-title">AI Explanation</h4>
-                                <button class="btn-ai" id="aiExplainBtn">
-                                    <span class="ai-icon">✨</span>
-                                    Get AI Explanation
-                                </button>
-                                <div class="ai-response" id="aiResponse" style="display: none;">
-                                    <div class="ai-text-container">
-                                        <p id="aiText"></p>
-                                    </div>
-                                    <div class="ai-controls">
-                                        <button class="btn-speak-ai" id="speakAiBtn">
-                                            <span class="speak-icon">🔊</span>
-                                            <span id="speakAiLabel">Speak</span>
-                                        </button>
-                                    </div>
+                        <div class="ai-section">
+                            <h4 class="ai-title">AI Explanation</h4>
+                            <button class="btn-ai" id="aiExplainBtn">
+                                <span class="ai-icon">✨</span>
+                                Get AI Explanation
+                            </button>
+                            <div class="ai-response" id="aiResponse" style="display: none;">
+                                <div class="ai-text-container">
+                                    <p id="aiText"></p>
+                                </div>
+                                <div class="ai-controls">
+                                    <button class="btn-speak-ai" id="speakAiBtn">
+                                        <span class="speak-icon">🔊</span>
+                                        <span id="speakAiLabel">Speak</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Navigation Bottom -->
-                        <div class="detail-nav-bottom">
-                            <button class="btn-nav-prev" id="prevBtnBottom" title="Previous verb">◀ Prev</button>
-                            <button class="btn-back-bottom" id="backBtnBottom">Back to List</button>
-                            <button class="btn-nav-next" id="nextBtnBottom" title="Next verb">Next ▶</button>
+                        <div class="verb-nav-buttons">
+                            <button class="btn-nav-prev" id="prevVerbBtn">◀ Previous</button>
+                            <button class="btn-nav-next" id="nextVerbBtn">Next ▶</button>
                         </div>
                     </div>
                 </div>
@@ -183,25 +178,22 @@
             <!-- History Tab -->
             <div class="tab-pane" id="history-tab">
                 <div class="history-container">
-                    <div class="history-controls">
-                        <h2 class="section-title">Learning History</h2>
-                        <button class="btn-clear-history" id="clearHistoryBtn">Clear History</button>
+                    <div class="history-header">
+                        <h3>Learning History</h3>
+                        <button class="btn-clear-history" id="clearHistoryBtn">Clear</button>
                     </div>
-                    <div class="history-list" id="historyList">
-                        <!-- History items will be populated here -->
-                    </div>
+                    <div class="history-list" id="historyList"></div>
                 </div>
             </div>
         </main>
-
-        <!-- Loading Indicator -->
-        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-            <div class="spinner"></div>
-            <p>Processing...</p>
-        </div>
     </div>
 
-    <script src="korean_verbs.json" type="application/json" id="verbsData"></script>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
     <script src="popup.js"></script>
 </body>
 </html>

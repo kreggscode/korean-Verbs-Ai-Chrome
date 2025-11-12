@@ -6,7 +6,7 @@ let currentVerbIndex = 0;
 let currentCategoryVerbs = [];
 let chatHistory = [];
 let learningHistory = [];
-let currentSpeechUtterance = null;
+let currentPage = 'categories'; // categories, verbs, verb-detail
 
 const POLLINATION_API = 'https://text.pollinations.ai/openai';
 const TEMPERATURE = 1; // Creative responses
@@ -16,16 +16,43 @@ const container = document.querySelector('.container');
 const themeToggle = document.getElementById('themeToggle');
 const tabButtons = document.querySelectorAll('.tab-btn');
 const tabPanes = document.querySelectorAll('.tab-pane');
+const backHeaderBtn = document.getElementById('backHeaderBtn');
+const mainTabs = document.getElementById('mainTabs');
+
+// Pages
+const pageCategories = document.getElementById('page-categories');
+const pageVerbs = document.getElementById('page-verbs');
+const pageVerbDetail = document.getElementById('page-verb-detail');
+
+// Categories & Verbs
 const categoriesGrid = document.getElementById('categoriesGrid');
-const verbsList = document.getElementById('verbsList');
-const verbDetail = document.getElementById('verbDetail');
 const categoryTitle = document.getElementById('categoryTitle');
-const resetBtn = document.getElementById('resetBtn');
-const backBtn = document.getElementById('backBtn');
 const searchInput = document.getElementById('searchInput');
+const verbsList = document.getElementById('verbsList');
+
+// Verb Detail
+const detailVerb = document.getElementById('detailVerb');
+const detailRomanization = document.getElementById('detailRomanization');
+const detailEnglish = document.getElementById('detailEnglish');
+const exampleKorean = document.getElementById('exampleKorean');
+const exampleRomanization = document.getElementById('exampleRomanization');
+const exampleEnglish = document.getElementById('exampleEnglish');
+const speakBtn = document.getElementById('speakBtn');
+const speakEnBtn = document.getElementById('speakEnBtn');
+const speakExampleBtn = document.getElementById('speakExampleBtn');
+const aiExplainBtn = document.getElementById('aiExplainBtn');
+const aiResponse = document.getElementById('aiResponse');
+const aiText = document.getElementById('aiText');
+const speakAiBtn = document.getElementById('speakAiBtn');
+const prevVerbBtn = document.getElementById('prevVerbBtn');
+const nextVerbBtn = document.getElementById('nextVerbBtn');
+
+// Chat
 const chatMessages = document.getElementById('chatMessages');
 const chatInput = document.getElementById('chatInput');
 const sendBtn = document.getElementById('sendBtn');
+
+// Vision
 const uploadBtn = document.getElementById('uploadBtn');
 const imageInput = document.getElementById('imageInput');
 const visionPreview = document.getElementById('visionPreview');
@@ -34,8 +61,12 @@ const analyzeBtn = document.getElementById('analyzeBtn');
 const clearImageBtn = document.getElementById('clearImageBtn');
 const visionResult = document.getElementById('visionResult');
 const analysisText = document.getElementById('analysisText');
+
+// History
 const historyList = document.getElementById('historyList');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+// Loading
 const loadingOverlay = document.getElementById('loadingOverlay');
 
 // ===== Initialize =====
@@ -58,7 +89,6 @@ async function loadVerbs() {
         console.log(`Loaded ${koreanVerbs.length} Korean verbs`);
     } catch (error) {
         console.error('Error loading verbs:', error);
-        // Fallback: show error message
         categoriesGrid.innerHTML = '<div style="padding: 20px; color: red;">Error loading verbs. Please reload the extension.</div>';
         koreanVerbs = [];
     }
@@ -80,22 +110,25 @@ function toggleTheme() {
     themeToggle.querySelector('.theme-icon').textContent = isDark ? '☀️' : '🌙';
 }
 
-// ===== Tab Navigation =====
-function setupTabNavigation() {
-    tabButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tabName = btn.dataset.tab;
-            switchTab(tabName);
-        });
-    });
-}
+// ===== Page Navigation =====
+function showPage(page) {
+    pageCategories.style.display = 'none';
+    pageVerbs.style.display = 'none';
+    pageVerbDetail.style.display = 'none';
 
-function switchTab(tabName) {
-    tabButtons.forEach(btn => btn.classList.remove('active'));
-    tabPanes.forEach(pane => pane.classList.remove('active'));
-
-    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-    document.getElementById(`${tabName}-tab`).classList.add('active');
+    if (page === 'categories') {
+        pageCategories.style.display = 'block';
+        backHeaderBtn.style.display = 'none';
+        currentPage = 'categories';
+    } else if (page === 'verbs') {
+        pageVerbs.style.display = 'block';
+        backHeaderBtn.style.display = 'block';
+        currentPage = 'verbs';
+    } else if (page === 'verb-detail') {
+        pageVerbDetail.style.display = 'block';
+        backHeaderBtn.style.display = 'block';
+        currentPage = 'verb-detail';
+    }
 }
 
 // ===== Categories =====
@@ -107,26 +140,24 @@ function renderCategories() {
         const btn = document.createElement('button');
         btn.className = 'category-btn';
         btn.textContent = category;
-        btn.addEventListener('click', () => selectCategory(category, btn));
+        btn.addEventListener('click', () => selectCategory(category));
         categoriesGrid.appendChild(btn);
     });
 }
 
-function selectCategory(category, btn) {
+function selectCategory(category) {
     currentCategory = category;
     currentCategoryVerbs = koreanVerbs.filter(v => v.category === category);
     currentVerbIndex = 0;
     
-    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
     categoryTitle.textContent = `${category} Verbs (${currentCategoryVerbs.length})`;
-    resetBtn.style.display = 'inline-block';
-    renderVerbs(category);
+    renderVerbs();
+    showPage('verbs');
 }
 
 // ===== Verbs List =====
-function renderVerbs(category) {
-    const verbs = koreanVerbs.filter(v => v.category === category);
+function renderVerbs() {
+    const verbs = currentCategoryVerbs;
     verbsList.innerHTML = '';
 
     verbs.forEach(verb => {
@@ -142,40 +173,34 @@ function renderVerbs(category) {
     });
 }
 
+// ===== Verb Detail =====
 function selectVerb(verb) {
     currentVerb = verb;
     currentVerbIndex = currentCategoryVerbs.findIndex(v => v.id === verb.id);
     
-    verbsList.style.display = 'none';
-    verbDetail.style.display = 'block';
+    detailVerb.textContent = verb.verb;
+    detailRomanization.textContent = verb.verb_romanization;
+    detailEnglish.textContent = verb.english_meaning;
+    exampleKorean.textContent = verb.korean_sentence;
+    exampleRomanization.textContent = verb.korean_sentence_romanization;
+    exampleEnglish.textContent = verb.english_sentence;
 
-    document.getElementById('detailVerb').textContent = verb.verb;
-    document.getElementById('detailRomanization').textContent = verb.verb_romanization;
-    document.getElementById('detailEnglish').textContent = verb.english_meaning;
-    document.getElementById('exampleKorean').textContent = verb.korean_sentence;
-    document.getElementById('exampleRomanization').textContent = verb.korean_sentence_romanization;
-    document.getElementById('exampleEnglish').textContent = verb.english_sentence;
-
-    // Update counter
-    updateVerbCounter();
+    // Update nav buttons
+    prevVerbBtn.disabled = currentVerbIndex === 0;
+    nextVerbBtn.disabled = currentVerbIndex === currentCategoryVerbs.length - 1;
 
     // Reset AI response
-    document.getElementById('aiResponse').style.display = 'none';
-    document.getElementById('aiText').textContent = '';
+    aiResponse.style.display = 'none';
+    aiText.textContent = '';
 
     addToHistory(verb);
-}
-
-function updateVerbCounter() {
-    const counter = document.getElementById('verbCounter');
-    counter.textContent = `${currentVerbIndex + 1} / ${currentCategoryVerbs.length}`;
+    showPage('verb-detail');
 }
 
 function goToPreviousVerb() {
     if (currentVerbIndex > 0) {
         currentVerbIndex--;
         selectVerb(currentCategoryVerbs[currentVerbIndex]);
-        scrollToTop();
     }
 }
 
@@ -183,19 +208,20 @@ function goToNextVerb() {
     if (currentVerbIndex < currentCategoryVerbs.length - 1) {
         currentVerbIndex++;
         selectVerb(currentCategoryVerbs[currentVerbIndex]);
-        scrollToTop();
     }
 }
 
-function scrollToTop() {
-    document.querySelector('.verb-detail').scrollTop = 0;
-}
-
-// ===== Pronunciation =====
-function speakText(text, lang = 'ko-KR') {
+// ===== Pronunciation with Natural TTS =====
+function speakText(text, lang = 'ko-KR', gender = 'female') {
+    // Cancel any ongoing speech
+    speechSynthesis.cancel();
+    
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
     utterance.rate = 0.9;
+    utterance.pitch = gender === 'female' ? 1.2 : 0.8;
+    utterance.volume = 1;
+    
     speechSynthesis.speak(utterance);
 }
 
@@ -203,11 +229,7 @@ function speakText(text, lang = 'ko-KR') {
 async function getAIExplanation() {
     if (!currentVerb) return;
 
-    const aiBtn = document.getElementById('aiExplainBtn');
-    const aiResponse = document.getElementById('aiResponse');
-    const aiText = document.getElementById('aiText');
-
-    aiBtn.disabled = true;
+    aiExplainBtn.disabled = true;
     showLoading(true);
 
     try {
@@ -267,8 +289,38 @@ Keep the explanation engaging and helpful for learners.`;
         aiText.textContent = 'Sorry, I encountered an error. Please try again.';
         aiResponse.style.display = 'block';
     } finally {
-        aiBtn.disabled = false;
+        aiExplainBtn.disabled = false;
         showLoading(false);
+    }
+}
+
+// ===== Speak AI Text =====
+function setupSpeakAiButton() {
+    if (speakAiBtn) {
+        speakAiBtn.addEventListener('click', () => {
+            const label = document.getElementById('speakAiLabel');
+            
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                label.textContent = 'Speak';
+                speakAiBtn.classList.remove('speaking');
+            } else {
+                const text = aiText.innerText;
+                if (text) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.2; // Female voice
+                    utterance.onend = () => {
+                        label.textContent = 'Speak';
+                        speakAiBtn.classList.remove('speaking');
+                    };
+                    label.textContent = 'Stop';
+                    speakAiBtn.classList.add('speaking');
+                    speechSynthesis.speak(utterance);
+                }
+            }
+        });
     }
 }
 
@@ -277,7 +329,6 @@ async function sendChatMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
 
-    // Add user message
     addChatMessage(message, 'user');
     chatInput.value = '';
 
@@ -287,8 +338,7 @@ async function sendChatMessage() {
         const systemMessage = {
             role: 'system',
             content: `You are a friendly and knowledgeable Korean language teacher. You help students learn Korean verbs, grammar, and culture. 
-You have access to a database of Korean verbs and can provide explanations, examples, and tips. 
-Be encouraging, clear, and engaging in your responses. Use Korean phrases when appropriate.`
+Keep responses concise and engaging. Use examples when helpful.`
         };
 
         const messages = [
@@ -312,17 +362,17 @@ Be encouraging, clear, and engaging in your responses. Use Korean phrases when a
                 model: 'openai',
                 messages: messages,
                 temperature: TEMPERATURE,
-                max_tokens: 500
+                max_tokens: 300
             })
         });
 
         const data = await response.json();
-        const botResponse = data.choices[0].message.content;
+        const botMessage = data.choices[0].message.content;
 
         chatHistory.push({ role: 'user', content: message });
-        chatHistory.push({ role: 'assistant', content: botResponse });
+        chatHistory.push({ role: 'assistant', content: botMessage });
 
-        addChatMessage(botResponse, 'bot');
+        addChatMessage(botMessage, 'bot');
     } catch (error) {
         console.error('Error sending chat message:', error);
         addChatMessage('Sorry, I encountered an error. Please try again.', 'bot');
@@ -331,11 +381,11 @@ Be encouraging, clear, and engaging in your responses. Use Korean phrases when a
     }
 }
 
-function addChatMessage(content, role) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `chat-message ${role}-message`;
-    messageDiv.innerHTML = `<div class="message-content"><p>${escapeHtml(content)}</p></div>`;
-    chatMessages.appendChild(messageDiv);
+function addChatMessage(message, role) {
+    const div = document.createElement('div');
+    div.className = `chat-message ${role}-message`;
+    div.innerHTML = `<div class="message-content"><p>${escapeHtml(message)}</p></div>`;
+    chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
@@ -347,16 +397,15 @@ async function analyzeImage() {
     showLoading(true);
 
     try {
-        // Convert image to base64
         const canvas = document.createElement('canvas');
         const img = new Image();
-        img.crossOrigin = 'anonymous';
+        
         img.onload = async () => {
             canvas.width = img.width;
             canvas.height = img.height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0);
-            const base64 = canvas.toDataURL('image/jpeg').split(',')[1];
+            const base64Image = canvas.toDataURL('image/jpeg').split(',')[1];
 
             try {
                 const response = await fetch(POLLINATION_API, {
@@ -368,18 +417,13 @@ async function analyzeImage() {
                         model: 'openai',
                         messages: [{
                             role: 'user',
-                            content: [
-                                {
-                                    type: 'text',
-                                    text: 'Analyze this image and provide insights. If there are any Korean texts or objects, explain them in the context of Korean language learning. Be creative and engaging!'
-                                },
-                                {
-                                    type: 'image_url',
-                                    image_url: {
-                                        url: `data:image/jpeg;base64,${base64}`
-                                    }
-                                }
-                            ]
+                            content: 'Analyze this image and describe what you see. If there are any Korean words or signs, translate them and explain their meaning. Relate the content to Korean language learning if possible.'
+                        }, {
+                            role: 'user',
+                            content: 'image',
+                            image_url: {
+                                url: `data:image/jpeg;base64,${base64Image}`
+                            }
                         }],
                         temperature: TEMPERATURE,
                         max_tokens: 500
@@ -478,6 +522,21 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, m => map[m]);
 }
 
+// ===== Tab Navigation =====
+function setupTabNavigation() {
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabName = btn.getAttribute('data-tab');
+            
+            tabButtons.forEach(b => b.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+            
+            btn.classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        });
+    });
+}
+
 // ===== Event Listeners =====
 function setupEventListeners() {
     // Theme
@@ -486,50 +545,24 @@ function setupEventListeners() {
     // Tabs
     setupTabNavigation();
 
-    // Categories & Verbs
-    resetBtn.addEventListener('click', () => {
-        currentCategory = null;
-        verbsList.style.display = 'block';
-        verbDetail.style.display = 'none';
-        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-        categoryTitle.textContent = 'Select a category';
-        resetBtn.style.display = 'none';
+    // Back button
+    backHeaderBtn.addEventListener('click', () => {
+        if (currentPage === 'verb-detail') {
+            showPage('verbs');
+        } else if (currentPage === 'verbs') {
+            showPage('categories');
+        }
     });
-
-    backBtn.addEventListener('click', () => {
-        verbsList.style.display = 'block';
-        verbDetail.style.display = 'none';
-    });
-
-    const backBtnBottom = document.getElementById('backBtnBottom');
-    if (backBtnBottom) {
-        backBtnBottom.addEventListener('click', () => {
-            verbsList.style.display = 'block';
-            verbDetail.style.display = 'none';
-        });
-    }
-
-    // Previous/Next Navigation
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const prevBtnBottom = document.getElementById('prevBtnBottom');
-    const nextBtnBottom = document.getElementById('nextBtnBottom');
-
-    if (prevBtn) prevBtn.addEventListener('click', goToPreviousVerb);
-    if (nextBtn) nextBtn.addEventListener('click', goToNextVerb);
-    if (prevBtnBottom) prevBtnBottom.addEventListener('click', goToPreviousVerb);
-    if (nextBtnBottom) nextBtnBottom.addEventListener('click', goToNextVerb);
 
     // Search
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase();
         if (!currentCategory) return;
 
-        const filtered = koreanVerbs.filter(v =>
-            v.category === currentCategory &&
-            (v.verb.includes(query) ||
-                v.verb_romanization.includes(query) ||
-                v.english_meaning.toLowerCase().includes(query))
+        const filtered = currentCategoryVerbs.filter(v =>
+            v.verb.includes(query) ||
+            v.verb_romanization.includes(query) ||
+            v.english_meaning.toLowerCase().includes(query)
         );
 
         verbsList.innerHTML = '';
@@ -547,45 +580,25 @@ function setupEventListeners() {
     });
 
     // Pronunciation
-    document.getElementById('speakBtn').addEventListener('click', () => {
-        if (currentVerb) speakText(currentVerb.verb);
+    speakBtn.addEventListener('click', () => {
+        if (currentVerb) speakText(currentVerb.verb, 'ko-KR', 'female');
     });
 
-    document.getElementById('speakExampleBtn').addEventListener('click', () => {
-        if (currentVerb) speakText(currentVerb.korean_sentence);
+    speakEnBtn.addEventListener('click', () => {
+        if (currentVerb) speakText(currentVerb.english_meaning, 'en-US', 'female');
+    });
+
+    speakExampleBtn.addEventListener('click', () => {
+        if (currentVerb) speakText(currentVerb.korean_sentence, 'ko-KR', 'female');
     });
 
     // AI Explanation
-    document.getElementById('aiExplainBtn').addEventListener('click', getAIExplanation);
+    aiExplainBtn.addEventListener('click', getAIExplanation);
+    setupSpeakAiButton();
 
-    // Speak AI Text
-    const speakAiBtn = document.getElementById('speakAiBtn');
-    if (speakAiBtn) {
-        speakAiBtn.addEventListener('click', () => {
-            const aiText = document.getElementById('aiText');
-            const label = document.getElementById('speakAiLabel');
-            
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel();
-                label.textContent = 'Speak';
-                speakAiBtn.classList.remove('speaking');
-            } else {
-                const text = aiText.innerText;
-                if (text) {
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = 'en-US';
-                    utterance.rate = 0.9;
-                    utterance.onend = () => {
-                        label.textContent = 'Speak';
-                        speakAiBtn.classList.remove('speaking');
-                    };
-                    label.textContent = 'Stop';
-                    speakAiBtn.classList.add('speaking');
-                    speechSynthesis.speak(utterance);
-                }
-            }
-        });
-    }
+    // Verb Navigation
+    prevVerbBtn.addEventListener('click', goToPreviousVerb);
+    nextVerbBtn.addEventListener('click', goToNextVerb);
 
     // Chat
     sendBtn.addEventListener('click', sendChatMessage);
@@ -625,5 +638,5 @@ function setupEventListeners() {
     clearHistoryBtn.addEventListener('click', clearHistory);
 }
 
-// ===== Start Application =====
-init();
+// ===== Initialize on Load =====
+document.addEventListener('DOMContentLoaded', init);
