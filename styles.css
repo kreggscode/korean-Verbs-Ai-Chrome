@@ -674,13 +674,14 @@ body {
     padding: 12px;
     border: 2px solid var(--border);
     border-radius: 8px;
-    background: var(--bg-secondary);
+    background: var(--bg);
     color: var(--text);
     font-size: 13px;
     font-family: inherit;
     resize: none;
     max-height: 80px;
     transition: all 0.3s ease;
+    min-height: 40px;
 }
 
 .chat-input:focus {
@@ -701,6 +702,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    min-width: 50px;
 }
 
 .btn-send:hover {

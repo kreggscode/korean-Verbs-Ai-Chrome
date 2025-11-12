@@ -223,9 +223,44 @@ function speakText(text, lang = 'ko-KR', gender = 'female') {
     
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
-    utterance.rate = 0.9;
-    utterance.pitch = gender === 'female' ? 1.2 : 0.8;
+    utterance.rate = 0.85;  // Slightly slower for clarity
+    utterance.pitch = gender === 'female' ? 1.3 : 0.8;
     utterance.volume = 1;
+    
+    // Try to select a natural female voice
+    const voices = speechSynthesis.getVoices();
+    if (voices.length > 0) {
+        // Prefer female voices for natural sound
+        let selectedVoice = null;
+        
+        // First, try to find a voice matching the language with female preference
+        for (let voice of voices) {
+            if (voice.lang.startsWith(lang.split('-')[0])) {
+                if (voice.name.toLowerCase().includes('female') || 
+                    voice.name.toLowerCase().includes('woman') ||
+                    voice.name.toLowerCase().includes('samantha') ||
+                    voice.name.toLowerCase().includes('victoria') ||
+                    voice.name.toLowerCase().includes('moira')) {
+                    selectedVoice = voice;
+                    break;
+                }
+            }
+        }
+        
+        // If no specific female voice found, use any voice for the language
+        if (!selectedVoice) {
+            for (let voice of voices) {
+                if (voice.lang.startsWith(lang.split('-')[0])) {
+                    selectedVoice = voice;
+                    break;
+                }
+            }
+        }
+        
+        if (selectedVoice) {
+            utterance.voice = selectedVoice;
+        }
+    }
     
     speechSynthesis.speak(utterance);
 }
@@ -559,12 +594,12 @@ function setupEventListeners() {
         }
     });
 
-    // Search
+    // Search - Search ALL verbs across all categories
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase();
-        if (!currentCategory) return;
-
-        const filtered = currentCategoryVerbs.filter(v =>
+        
+        // Search in ALL verbs, not just current category
+        const filtered = koreanVerbs.filter(v =>
             v.verb.includes(query) ||
             v.verb_romanization.includes(query) ||
             v.english_meaning.toLowerCase().includes(query)
