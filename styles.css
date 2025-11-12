@@ -1178,7 +1178,8 @@ body {
 .verb-detail-content {
     padding: 16px;
     overflow-y: auto;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
 }
 
 .verb-detail-content::-webkit-scrollbar {
