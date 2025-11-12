@@ -47,6 +47,8 @@ const aiText = document.getElementById('aiText');
 const speakAiBtn = document.getElementById('speakAiBtn');
 const prevVerbBtn = document.getElementById('prevVerbBtn');
 const nextVerbBtn = document.getElementById('nextVerbBtn');
+const prevVerbBtnTop = document.getElementById('prevVerbBtnTop');
+const nextVerbBtnTop = document.getElementById('nextVerbBtnTop');
 
 // Chat
 const chatMessages = document.getElementById('chatMessages');
@@ -604,6 +606,8 @@ function setupEventListeners() {
     // Verb Navigation
     prevVerbBtn.addEventListener('click', goToPreviousVerb);
     nextVerbBtn.addEventListener('click', goToNextVerb);
+    prevVerbBtnTop.addEventListener('click', goToPreviousVerb);
+    nextVerbBtnTop.addEventListener('click', goToNextVerb);
 
     // Chat
     sendBtn.addEventListener('click', sendChatMessage);

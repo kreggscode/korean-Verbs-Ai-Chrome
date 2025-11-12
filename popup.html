@@ -73,17 +73,23 @@
 
                 <!-- Page 3: Verb Detail -->
                 <div class="page" id="page-verb-detail">
+                    <!-- Top Navigation -->
+                    <div class="verb-nav-top">
+                        <button class="btn-nav-prev" id="prevVerbBtnTop">◀ Previous</button>
+                        <button class="btn-nav-next" id="nextVerbBtnTop">Next ▶</button>
+                    </div>
+
                     <div class="verb-detail-content">
                         <h3 class="verb-korean" id="detailVerb"></h3>
                         <p class="verb-romanization" id="detailRomanization"></p>
                         <p class="verb-english" id="detailEnglish"></p>
                         
                         <div class="pronunciation-section">
-                            <button class="btn-speak" id="speakBtn">
+                            <button class="btn-speak-side" id="speakBtn">
                                 <span class="speak-icon">🔊</span>
                                 Pronounce (Korean)
                             </button>
-                            <button class="btn-speak-en" id="speakEnBtn">
+                            <button class="btn-speak-side" id="speakEnBtn">
                                 <span class="speak-icon">🔊</span>
                                 Pronounce (English)
                             </button>
