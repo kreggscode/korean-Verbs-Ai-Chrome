@@ -112,20 +112,20 @@ function toggleTheme() {
 
 // ===== Page Navigation =====
 function showPage(page) {
-    pageCategories.style.display = 'none';
-    pageVerbs.style.display = 'none';
-    pageVerbDetail.style.display = 'none';
+    pageCategories.classList.remove('active');
+    pageVerbs.classList.remove('active');
+    pageVerbDetail.classList.remove('active');
 
     if (page === 'categories') {
-        pageCategories.style.display = 'block';
+        pageCategories.classList.add('active');
         backHeaderBtn.style.display = 'none';
         currentPage = 'categories';
     } else if (page === 'verbs') {
-        pageVerbs.style.display = 'block';
+        pageVerbs.classList.add('active');
         backHeaderBtn.style.display = 'block';
         currentPage = 'verbs';
     } else if (page === 'verb-detail') {
-        pageVerbDetail.style.display = 'block';
+        pageVerbDetail.classList.add('active');
         backHeaderBtn.style.display = 'block';
         currentPage = 'verb-detail';
     }
