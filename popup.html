@@ -67,45 +67,66 @@
                         <h2 class="section-title" id="categoryTitle">Select a category</h2>
                         <button class="btn-reset" id="resetBtn" style="display: none;">← Back</button>
                     </div>
-                    <div class="verbs-list" id="verbsList">
-                        <!-- Verbs will be populated here -->
-                    </div>
-                </div>
-
-                <div class="verb-detail" id="verbDetail" style="display: none;">
-                    <button class="btn-back" id="backBtn">← Back to List</button>
-                    <div class="verb-card-detail">
-                        <h3 class="verb-korean" id="detailVerb"></h3>
-                        <p class="verb-romanization" id="detailRomanization"></p>
-                        <p class="verb-english" id="detailEnglish"></p>
-                        
-                        <div class="pronunciation-section">
-                            <button class="btn-speak" id="speakBtn">
-                                <span class="speak-icon">🔊</span>
-                                Pronounce
-                            </button>
-                        </div>
-
-                        <div class="example-section">
-                            <h4 class="example-title">Example Sentence</h4>
-                            <p class="example-korean" id="exampleKorean"></p>
-                            <p class="example-romanization" id="exampleRomanization"></p>
-                            <p class="example-english" id="exampleEnglish"></p>
-                            <button class="btn-speak-example" id="speakExampleBtn">
-                                <span class="speak-icon">🔊</span>
-                                Pronounce Example
-                            </button>
-                        </div>
-
-                        <div class="ai-section">
-                            <h4 class="ai-title">AI Explanation</h4>
-                            <button class="btn-ai" id="aiExplainBtn">
-                                <span class="ai-icon">✨</span>
-                                Get AI Explanation
-                            </button>
-                            <div class="ai-response" id="aiResponse" style="display: none;">
-                                <p id="aiText"></p>
+                    <div class="verbs-list" id="verbsList"></div>
+                    <div class="verb-detail" id="verbDetail" style="display: none;">
+                        <!-- Navigation Top -->
+                        <div class="detail-nav-top">
+                            <button class="btn-back" id="backBtn">← Back</button>
+                            <div class="verb-counter" id="verbCounter"></div>
+                            <div class="nav-buttons">
+                                <button class="btn-nav-prev" id="prevBtn" title="Previous verb">◀ Prev</button>
+                                <button class="btn-nav-next" id="nextBtn" title="Next verb">Next ▶</button>
                             </div>
+                        </div>
+                        
+                        <div class="verb-content">
+                            <h3 class="verb-korean" id="detailVerb"></h3>
+                            <p class="verb-romanization" id="detailRomanization"></p>
+                            <p class="verb-english" id="detailEnglish"></p>
+                            
+                            <div class="pronunciation-section">
+                                <button class="btn-speak" id="speakBtn">
+                                    <span class="speak-icon">🔊</span>
+                                    Pronounce
+                                </button>
+                            </div>
+
+                            <div class="example-section">
+                                <h4 class="example-title">Example Sentence</h4>
+                                <p class="example-korean" id="exampleKorean"></p>
+                                <p class="example-romanization" id="exampleRomanization"></p>
+                                <p class="example-english" id="exampleEnglish"></p>
+                                <button class="btn-speak-example" id="speakExampleBtn">
+                                    <span class="speak-icon">🔊</span>
+                                    Pronounce Example
+                                </button>
+                            </div>
+
+                            <div class="ai-section">
+                                <h4 class="ai-title">AI Explanation</h4>
+                                <button class="btn-ai" id="aiExplainBtn">
+                                    <span class="ai-icon">✨</span>
+                                    Get AI Explanation
+                                </button>
+                                <div class="ai-response" id="aiResponse" style="display: none;">
+                                    <div class="ai-text-container">
+                                        <p id="aiText"></p>
+                                    </div>
+                                    <div class="ai-controls">
+                                        <button class="btn-speak-ai" id="speakAiBtn">
+                                            <span class="speak-icon">🔊</span>
+                                            <span id="speakAiLabel">Speak</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Bottom -->
+                        <div class="detail-nav-bottom">
+                            <button class="btn-nav-prev" id="prevBtnBottom" title="Previous verb">◀ Prev</button>
+                            <button class="btn-back-bottom" id="backBtnBottom">Back to List</button>
+                            <button class="btn-nav-next" id="nextBtnBottom" title="Next verb">Next ▶</button>
                         </div>
                     </div>
                 </div>

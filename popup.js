@@ -2,8 +2,11 @@
 let koreanVerbs = [];
 let currentCategory = null;
 let currentVerb = null;
+let currentVerbIndex = 0;
+let currentCategoryVerbs = [];
 let chatHistory = [];
 let learningHistory = [];
+let currentSpeechUtterance = null;
 
 const POLLINATION_API = 'https://text.pollinations.ai/openai';
 const TEMPERATURE = 1; // Creative responses
@@ -111,9 +114,12 @@ function renderCategories() {
 
 function selectCategory(category, btn) {
     currentCategory = category;
+    currentCategoryVerbs = koreanVerbs.filter(v => v.category === category);
+    currentVerbIndex = 0;
+    
     document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    categoryTitle.textContent = `${category} Verbs`;
+    categoryTitle.textContent = `${category} Verbs (${currentCategoryVerbs.length})`;
     resetBtn.style.display = 'inline-block';
     renderVerbs(category);
 }
@@ -138,6 +144,8 @@ function renderVerbs(category) {
 
 function selectVerb(verb) {
     currentVerb = verb;
+    currentVerbIndex = currentCategoryVerbs.findIndex(v => v.id === verb.id);
+    
     verbsList.style.display = 'none';
     verbDetail.style.display = 'block';
 
@@ -148,11 +156,39 @@ function selectVerb(verb) {
     document.getElementById('exampleRomanization').textContent = verb.korean_sentence_romanization;
     document.getElementById('exampleEnglish').textContent = verb.english_sentence;
 
+    // Update counter
+    updateVerbCounter();
+
     // Reset AI response
     document.getElementById('aiResponse').style.display = 'none';
     document.getElementById('aiText').textContent = '';
 
     addToHistory(verb);
+}
+
+function updateVerbCounter() {
+    const counter = document.getElementById('verbCounter');
+    counter.textContent = `${currentVerbIndex + 1} / ${currentCategoryVerbs.length}`;
+}
+
+function goToPreviousVerb() {
+    if (currentVerbIndex > 0) {
+        currentVerbIndex--;
+        selectVerb(currentCategoryVerbs[currentVerbIndex]);
+        scrollToTop();
+    }
+}
+
+function goToNextVerb() {
+    if (currentVerbIndex < currentCategoryVerbs.length - 1) {
+        currentVerbIndex++;
+        selectVerb(currentCategoryVerbs[currentVerbIndex]);
+        scrollToTop();
+    }
+}
+
+function scrollToTop() {
+    document.querySelector('.verb-detail').scrollTop = 0;
 }
 
 // ===== Pronunciation =====
@@ -213,7 +249,18 @@ Keep the explanation engaging and helpful for learners.`;
         const data = await response.json();
         const explanation = data.choices[0].message.content;
 
-        aiText.textContent = explanation;
+        // Format text with proper line breaks and spacing
+        const formattedText = explanation
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length > 0)
+            .join('\n\n');
+
+        aiText.innerHTML = formattedText
+            .split('\n\n')
+            .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
+            .join('');
+        
         aiResponse.style.display = 'block';
     } catch (error) {
         console.error('Error getting AI explanation:', error);
@@ -454,6 +501,25 @@ function setupEventListeners() {
         verbDetail.style.display = 'none';
     });
 
+    const backBtnBottom = document.getElementById('backBtnBottom');
+    if (backBtnBottom) {
+        backBtnBottom.addEventListener('click', () => {
+            verbsList.style.display = 'block';
+            verbDetail.style.display = 'none';
+        });
+    }
+
+    // Previous/Next Navigation
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtnBottom = document.getElementById('prevBtnBottom');
+    const nextBtnBottom = document.getElementById('nextBtnBottom');
+
+    if (prevBtn) prevBtn.addEventListener('click', goToPreviousVerb);
+    if (nextBtn) nextBtn.addEventListener('click', goToNextVerb);
+    if (prevBtnBottom) prevBtnBottom.addEventListener('click', goToPreviousVerb);
+    if (nextBtnBottom) nextBtnBottom.addEventListener('click', goToNextVerb);
+
     // Search
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase();
@@ -491,6 +557,35 @@ function setupEventListeners() {
 
     // AI Explanation
     document.getElementById('aiExplainBtn').addEventListener('click', getAIExplanation);
+
+    // Speak AI Text
+    const speakAiBtn = document.getElementById('speakAiBtn');
+    if (speakAiBtn) {
+        speakAiBtn.addEventListener('click', () => {
+            const aiText = document.getElementById('aiText');
+            const label = document.getElementById('speakAiLabel');
+            
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                label.textContent = 'Speak';
+                speakAiBtn.classList.remove('speaking');
+            } else {
+                const text = aiText.innerText;
+                if (text) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9;
+                    utterance.onend = () => {
+                        label.textContent = 'Speak';
+                        speakAiBtn.classList.remove('speaking');
+                    };
+                    label.textContent = 'Stop';
+                    speakAiBtn.classList.add('speaking');
+                    speechSynthesis.speak(utterance);
+                }
+            }
+        });
+    }
 
     // Chat
     sendBtn.addEventListener('click', sendChatMessage);
