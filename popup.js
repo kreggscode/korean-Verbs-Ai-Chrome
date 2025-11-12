@@ -188,9 +188,11 @@ function selectVerb(verb) {
     exampleRomanization.textContent = verb.korean_sentence_romanization;
     exampleEnglish.textContent = verb.english_sentence;
 
-    // Update nav buttons
+    // Update nav buttons (both top and bottom)
     prevVerbBtn.disabled = currentVerbIndex === 0;
     nextVerbBtn.disabled = currentVerbIndex === currentCategoryVerbs.length - 1;
+    prevVerbBtnTop.disabled = currentVerbIndex === 0;
+    nextVerbBtnTop.disabled = currentVerbIndex === currentCategoryVerbs.length - 1;
 
     // Reset AI response
     aiResponse.style.display = 'none';
