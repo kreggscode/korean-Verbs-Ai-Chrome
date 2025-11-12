@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korean Verbs AI</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">🇰🇷 Korean Verbs AI</h1>
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="verbs">
+                <span class="tab-icon">📚</span>
+                <span class="tab-label">Verbs</span>
+            </button>
+            <button class="tab-btn" data-tab="chat">
+                <span class="tab-icon">💬</span>
+                <span class="tab-label">Chat</span>
+            </button>
+            <button class="tab-btn" data-tab="vision">
+                <span class="tab-icon">👁️</span>
+                <span class="tab-label">Vision</span>
+            </button>
+            <button class="tab-btn" data-tab="history">
+                <span class="tab-icon">⏱️</span>
+                <span class="tab-label">History</span>
+            </button>
+        </nav>
+
+        <!-- Tab Content -->
+        <main class="tab-content">
+            <!-- Verbs Tab -->
+            <div class="tab-pane active" id="verbs-tab">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search verbs..." class="search-input">
+                    <span class="search-icon">🔍</span>
+                </div>
+
+                <div class="categories-section">
+                    <h2 class="section-title">Categories</h2>
+                    <div class="categories-grid" id="categoriesGrid">
+                        <!-- Categories will be populated here -->
+                    </div>
+                </div>
+
+                <div class="verbs-section">
+                    <div class="verbs-header">
+                        <h2 class="section-title" id="categoryTitle">Select a category</h2>
+                        <button class="btn-reset" id="resetBtn" style="display: none;">← Back</button>
+                    </div>
+                    <div class="verbs-list" id="verbsList">
+                        <!-- Verbs will be populated here -->
+                    </div>
+                </div>
+
+                <div class="verb-detail" id="verbDetail" style="display: none;">
+                    <button class="btn-back" id="backBtn">← Back to List</button>
+                    <div class="verb-card-detail">
+                        <h3 class="verb-korean" id="detailVerb"></h3>
+                        <p class="verb-romanization" id="detailRomanization"></p>
+                        <p class="verb-english" id="detailEnglish"></p>
+                        
+                        <div class="pronunciation-section">
+                            <button class="btn-speak" id="speakBtn">
+                                <span class="speak-icon">🔊</span>
+                                Pronounce
+                            </button>
+                        </div>
+
+                        <div class="example-section">
+                            <h4 class="example-title">Example Sentence</h4>
+                            <p class="example-korean" id="exampleKorean"></p>
+                            <p class="example-romanization" id="exampleRomanization"></p>
+                            <p class="example-english" id="exampleEnglish"></p>
+                            <button class="btn-speak-example" id="speakExampleBtn">
+                                <span class="speak-icon">🔊</span>
+                                Pronounce Example
+                            </button>
+                        </div>
+
+                        <div class="ai-section">
+                            <h4 class="ai-title">AI Explanation</h4>
+                            <button class="btn-ai" id="aiExplainBtn">
+                                <span class="ai-icon">✨</span>
+                                Get AI Explanation
+                            </button>
+                            <div class="ai-response" id="aiResponse" style="display: none;">
+                                <p id="aiText"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Tab -->
+            <div class="tab-pane" id="chat-tab">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message bot-message">
+                            <div class="message-content">
+                                <p>안녕하세요! (Annyeonghaseyo!) Hello! I'm your Korean Verbs AI assistant. Ask me anything about Korean verbs, grammar, or culture! 🇰🇷</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <textarea id="chatInput" placeholder="Ask me about Korean verbs..." class="chat-input"></textarea>
+                        <button class="btn-send" id="sendBtn">
+                            <span class="send-icon">📤</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vision Tab -->
+            <div class="tab-pane" id="vision-tab">
+                <div class="vision-container">
+                    <div class="vision-upload">
+                        <input type="file" id="imageInput" accept="image/*" class="image-input" style="display: none;">
+                        <button class="btn-upload" id="uploadBtn">
+                            <span class="upload-icon">📸</span>
+                            Upload Image
+                        </button>
+                        <p class="upload-hint">Upload an image to analyze with AI</p>
+                    </div>
+
+                    <div class="vision-preview" id="visionPreview" style="display: none;">
+                        <img id="previewImage" src="" alt="Preview">
+                        <button class="btn-analyze" id="analyzeBtn">
+                            <span class="analyze-icon">🔍</span>
+                            Analyze Image
+                        </button>
+                        <button class="btn-clear" id="clearImageBtn">Clear</button>
+                    </div>
+
+                    <div class="vision-result" id="visionResult" style="display: none;">
+                        <h3>Analysis Result</h3>
+                        <p id="analysisText"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div class="tab-pane" id="history-tab">
+                <div class="history-container">
+                    <div class="history-controls">
+                        <h2 class="section-title">Learning History</h2>
+                        <button class="btn-clear-history" id="clearHistoryBtn">Clear History</button>
+                    </div>
+                    <div class="history-list" id="historyList">
+                        <!-- History items will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Loading Indicator -->
+        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <script src="korean_verbs.json" type="application/json" id="verbsData"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
