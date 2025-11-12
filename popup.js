@@ -47,10 +47,16 @@ async function init() {
 // ===== Load Verbs from JSON =====
 async function loadVerbs() {
     try {
-        const response = await fetch('korean_verbs.json');
+        const response = await fetch(chrome.runtime.getURL('korean_verbs.json'));
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         koreanVerbs = await response.json();
+        console.log(`Loaded ${koreanVerbs.length} Korean verbs`);
     } catch (error) {
         console.error('Error loading verbs:', error);
+        // Fallback: show error message
+        categoriesGrid.innerHTML = '<div style="padding: 20px; color: red;">Error loading verbs. Please reload the extension.</div>';
         koreanVerbs = [];
     }
 }

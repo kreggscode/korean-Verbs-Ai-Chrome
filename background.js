@@ -23,19 +23,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
-// Handle context menu for quick access
-chrome.contextMenus.create({
-    id: 'korean-verbs-ai',
-    title: 'Learn Korean Verbs',
-    contexts: ['selection']
-});
-
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === 'korean-verbs-ai') {
-        // Open extension popup with selected text
-        chrome.action.openPopup();
-    }
-});
+// Context menu is optional - removed to avoid permission issues
 
 // Periodic cleanup of old history (optional)
 chrome.alarms.create('cleanupHistory', { periodInMinutes: 60 });
