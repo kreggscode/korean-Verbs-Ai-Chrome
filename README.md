@@ -1,7 +1,7 @@
 # 🇰🇷 Korean Verbs AI - Chrome Extension
 
-[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Coming%20Soon-blue?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/detail/placeholder-link-coming-soon)
-[![Website](https://img.shields.io/badge/🌐_Website-Coming%20Soon-purple?style=for-the-badge)](https://kreggscode.github.io/korean-Verbs-Ai-Chrome/)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Install%20Now-blue?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/detail/placeholder-link)
+[![Website](https://img.shields.io/badge/🌐_Website-Visit%20Site-purple?style=for-the-badge)](https://kreggscode.github.io/korean-Verbs-Ai-Chrome/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 [![Version](https://img.shields.io/badge/Version-1.0.0-orange?style=for-the-badge)](manifest.json)
 
@@ -11,7 +11,7 @@
   <p><strong>Interactive • Intelligent • Immersive</strong></p>
   <p>Learn Korean verbs like never before with AI-powered explanations, native pronunciation, and visual learning tools.</p>
   <br>
-  <a href="https://chrome.google.com/webstore/detail/placeholder-link-coming-soon"><img src="https://storage.googleapis.com/chrome-gcs-uploader.appspot.com/image/WlD8wC6g8khYWPJUsQceQkhXSlv.png" width="200" alt="Available in the Chrome Web Store"/></a>
+  <a href="https://chrome.google.com/webstore/detail/placeholder-link"><img src="https://storage.googleapis.com/chrome-gcs-uploader.appspot.com/image/WlD8wC6g8khYWPJUsQceQkhXSlv.png" width="200" alt="Available in the Chrome Web Store"/></a>
 </div>
 
 ---
@@ -54,8 +54,8 @@
 
 ## 📥 **Installation**
 
-### From Chrome Web Store *(Coming Soon)*
-1. Visit the [Chrome Web Store](https://chrome.google.com/webstore/detail/placeholder-link-coming-soon)
+### From Chrome Web Store
+1. Visit the [Chrome Web Store](https://chrome.google.com/webstore/detail/placeholder-link)
 2. Click **"Add to Chrome"**
 3. Start learning Korean! 🇰🇷
 
@@ -196,7 +196,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 🌟 **Ready to Learn Korean?**
 
-<a href="https://chrome.google.com/webstore/detail/placeholder-link-coming-soon"><img src="https://img.shields.io/badge/🚀_Get_Started-Install_Now-blue?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Install Now"/></a>
+<a href="https://chrome.google.com/webstore/detail/placeholder-link"><img src="https://img.shields.io/badge/🚀_Get_Started-Install_Now-blue?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Install Now"/></a>
 
 ---
 
