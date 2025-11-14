@@ -10,10 +10,6 @@
 
 #### Declared Permissions:
 ```json
-"permissions": [
-  "storage",
-  "activeTab"
-],
 "host_permissions": [
   "https://text.pollinations.ai/*",
   "https://image.pollinations.ai/*"
@@ -24,8 +20,6 @@
 
 | Permission | Purpose | Used | Status |
 |-----------|---------|------|--------|
-| `storage` | Save learning history locally | ✅ Yes | **REQUIRED** |
-| `activeTab` | Detect current tab (future feature) | ✅ Yes | **REQUIRED** |
 | `https://text.pollinations.ai/*` | AI text generation API | ✅ Yes | **REQUIRED** |
 | `https://image.pollinations.ai/*` | AI image analysis API | ✅ Yes | **REQUIRED** |
 
@@ -222,6 +216,6 @@ Before uploading to Chrome Web Store:
 
 ---
 
-**Date**: November 12, 2025
-**Version**: 2.2
+**Date**: November 14, 2025
+**Version**: 1.0.0
 **Status**: ✅ COMPLIANT & READY

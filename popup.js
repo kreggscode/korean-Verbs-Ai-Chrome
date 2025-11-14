@@ -330,7 +330,7 @@ Keep the explanation engaging and helpful for learners.`;
                 messages: [
                     {
                         role: 'system',
-                        content: 'You are an expert Korean language teacher. Provide clear, engaging explanations for Korean verbs.'
+                        content: 'You are an expert Korean language teacher who teaches English-speaking students. Always respond in English. When explaining Korean verbs or examples, always include: 1) Korean text in Hangul, 2) Romanization in brackets, 3) English translation. Format examples as: Korean (romanization) - English meaning. Keep explanations clear and educational.'
                     },
                     {
                         role: 'user',
@@ -411,8 +411,7 @@ async function sendChatMessage() {
     try {
         const systemMessage = {
             role: 'system',
-            content: `You are a friendly and knowledgeable Korean language teacher. You help students learn Korean verbs, grammar, and culture. 
-Keep responses concise and engaging. Use examples when helpful.`
+            content: `You are a friendly and knowledgeable Korean language teacher who helps English-speaking students learn Korean. Always respond in English unless the user specifically asks in another language. When teaching Korean content, always include: 1) Korean text in Hangul, 2) Romanization in brackets, 3) English translation. Format examples as: Korean (romanization) - English meaning. Keep responses concise and engaging. Use examples when helpful.`
         };
 
         const messages = [

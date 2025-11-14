@@ -4,10 +4,7 @@
 chrome.runtime.onInstalled.addListener((details) => {
     if (details.reason === 'install') {
         console.log('Korean Verbs AI extension installed!');
-        // Open welcome page
-        chrome.tabs.create({
-            url: 'https://github.com/kreggscode/korean-Verbs-Ai-Chrome'
-        });
+        // Removed auto-opening of GitHub page for store compliance
     }
 });
 
@@ -24,20 +21,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // Context menu is optional - removed to avoid permission issues
-
-// Periodic cleanup of old history (optional)
-chrome.alarms.create('cleanupHistory', { periodInMinutes: 60 });
-
-chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === 'cleanupHistory') {
-        chrome.storage.local.get(['learningHistory'], (result) => {
-            if (result && result.learningHistory && result.learningHistory.length > 100) {
-                // Keep only the 100 most recent items
-                const history = result.learningHistory.slice(0, 100);
-                chrome.storage.local.set({ learningHistory: history });
-            }
-        });
-    }
-});
 
 console.log('Korean Verbs AI Service Worker loaded');

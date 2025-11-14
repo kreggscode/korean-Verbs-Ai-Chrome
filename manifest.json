@@ -3,10 +3,6 @@
   "name": "Korean Verbs AI",
   "version": "1.0.0",
   "description": "Learn Korean verbs with AI-powered explanations, pronunciation, and interactive chat",
-  "permissions": [
-    "storage",
-    "activeTab"
-  ],
   "host_permissions": [
     "https://text.pollinations.ai/*",
     "https://image.pollinations.ai/*"
